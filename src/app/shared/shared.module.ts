@@ -7,11 +7,12 @@ import { CommonModule } from '@angular/common';
 import { IndraAutocompleteComponent } from './components/indra-autocomplete/indra-autocomplete.component';
 import { MaterialModule } from '../material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IndraInputWordComponent } from './components/indra-input-word/indra-input-word.component';
 
 @NgModule({
-  declarations: [IndraAutocompleteComponent],
+  declarations: [IndraAutocompleteComponent, IndraInputWordComponent],
   imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule],
-  exports: [IndraAutocompleteComponent],
+  exports: [IndraAutocompleteComponent, IndraInputWordComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class SharedModule {

@@ -1,18 +1,18 @@
-.containerAutocomplete {
+.containerInputWord {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   flex-wrap: wrap;
   width: 100%;
 }
-
 .column-left {
   width: 100%;
 }
-
-.column-right {
-  width: 50%;
-}
 mat-form-field {
   width: 100%;
+}
+
+.primary-color {
+  background-color: #ffab40 !important;
+  color: #ffffff !important;
 }

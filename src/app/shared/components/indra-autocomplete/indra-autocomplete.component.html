@@ -1,7 +1,17 @@
 <div class="containerAutocomplete">
   <div class="column-left">
-    <mat-form-field class="example-full-width" appearance="fill">
+    <mat-form-field class="example-full-width" appearance="outline">
       <mat-label>{{ label }}</mat-label>
+      <mat-chip-list style="display: inline-flex">
+        <mat-chip
+          *ngFor="let option of selectedOptions"
+          [selectable]="true"
+          (removed)="removeChip(option)"
+        >
+          {{ option.name }}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
       <input
         type="text"
         matInput
@@ -21,17 +31,5 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-  </div>
-  <div class="column-right">
-    <mat-chip-list style="display: inline-flex">
-      <mat-chip
-        *ngFor="let option of selectedOptions"
-        [selectable]="true"
-        (removed)="removeChip(option)"
-      >
-        {{ option.name }}
-        <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip>
-    </mat-chip-list>
   </div>
 </div>
