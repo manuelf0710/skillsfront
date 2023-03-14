@@ -1,0 +1,37 @@
+<div class="containerAutocomplete">
+  <div class="column-left">
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>{{ label }}</mat-label>
+      <input
+        type="text"
+        matInput
+        [formControl]="myControl"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        [displayWith]="displayFn"
+        (optionSelected)="addChip($event)"
+      >
+        <mat-option
+          *ngFor="let option of filteredOptions | async"
+          [value]="option"
+        >
+          {{ option.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+  <div class="column-right">
+    <mat-chip-list style="display: inline-flex">
+      <mat-chip
+        *ngFor="let option of selectedOptions"
+        [selectable]="true"
+        (removed)="removeChip(option)"
+      >
+        {{ option.name }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+      </mat-chip>
+    </mat-chip-list>
+  </div>
+</div>

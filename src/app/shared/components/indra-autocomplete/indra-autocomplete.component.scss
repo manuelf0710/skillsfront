@@ -1,0 +1,15 @@
+.containerAutocomplete {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.column-left {
+  width: 50%;
+}
+
+.column-right {
+  width: 50%;
+}

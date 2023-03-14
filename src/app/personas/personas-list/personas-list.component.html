@@ -1,0 +1,203 @@
+<mat-grid-list cols="2" rowHeight="4:2">
+  <mat-grid-tile>
+    <app-indra-autocomplete
+      [apiUrl]="urlProyectos"
+      [label]="'Proyectos'"
+      (valueChange)="getValuesProyectos($event)"
+    ></app-indra-autocomplete>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <app-indra-autocomplete
+      [apiUrl]="urlRoles"
+      [label]="'Roles'"
+      (valueChange)="getValuesRoles($event)"
+    ></app-indra-autocomplete>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <app-indra-autocomplete
+      [apiUrl]="urlSkills"
+      [label]="'Skills'"
+      (valueChange)="getValuesSkills($event)"
+    ></app-indra-autocomplete>
+  </mat-grid-tile>
+  <mat-grid-tile>
+    <app-indra-autocomplete
+      [apiUrl]="urlPracticas"
+      [label]="'practicas'"
+      (valueChange)="getValuesPracticas($event)"
+    ></app-indra-autocomplete>
+  </mat-grid-tile>
+</mat-grid-list>
+<form class="example-form">
+  <div class="container">
+    <div class="column-left">
+      <!-- <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Proyecto</mat-label>
+        <input
+          type="text"
+          matInput
+          [formControl]="myControl"
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete
+          #auto="matAutocomplete"
+          [displayWith]="displayFn"
+          (optionSelected)="addChip($event)"
+        >
+          <mat-option
+            *ngFor="let option of filteredOptions | async"
+            [value]="option"
+          >
+            {{ option.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field> -->
+    </div>
+    <div class="column-right">
+      <mat-chip-list style="display: inline-flex">
+        <mat-chip
+          *ngFor="let option of selectedOptions"
+          [selectable]="true"
+          (removed)="removeChip(option)"
+        >
+          {{ option.name }}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+</form>
+
+<div *ngIf="personasList">
+  <!--<form [formGroup]="searchForm" class="search__form" style="font-size: 12px">
+    <mat-form-field class="search__form_field" appearance="outline">
+      <mat-label>profesional</mat-label>
+      <input
+        type="text"
+        aria-label="profesional"
+        matInput
+        formControlName="profesionalsearch"
+        (keyup)="applyFilter()"
+        autocomplete="off"
+      />
+    </mat-form-field>
+
+    <mat-form-field class="search__form_field" appearance="outline">
+      <mat-label>Dia</mat-label>
+      <input
+        type="text"
+        aria-label="Fecha Cita"
+        matInput
+        formControlName="fechacitasearch"
+        (keyup)="applyFilter()"
+        autocomplete="off"
+        placeholder="lunes"
+      />
+    </mat-form-field>
+
+    <mat-form-field class="search__form_field" appearance="outline">
+      <mat-label>fecha Cita Disponible</mat-label>
+      <input
+        matInput
+        formControlName="fechacitadatesearch"
+        [matDatepicker]="picker"
+        (dateInput)="applyFilter()"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </form>-->
+
+  <button mat-raised-button color="primary" (click)="searchPeople()">
+    Buscar
+  </button>
+
+  <table mat-table [dataSource]="personasList" class="mat-elevation-z8 w-100">
+    <!-- Position Column -->
+    <ng-container matColumnDef="codigo">
+      <th mat-header-cell *matHeaderCellDef>Código.</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.codigo_persona }}
+      </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="nombres">
+      <th mat-header-cell *matHeaderCellDef>Nombre</th>
+      <td mat-cell *matCellDef="let item">
+        {{ item.nombre_persona }}
+      </td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="apellidos">
+      <th mat-header-cell *matHeaderCellDef>Apellidos</th>
+      <td mat-cell *matCellDef="let item">
+        {{ item.apellido_persona }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="correo_corporativo">
+      <th mat-header-cell *matHeaderCellDef>Correo Corporativo</th>
+      <td mat-cell *matCellDef="let item">
+        {{ item.correo_corporativo }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="correo_personal">
+      <th mat-header-cell *matHeaderCellDef>Correo Personal</th>
+      <td mat-cell *matCellDef="let item">
+        {{ item.correo_personal }}
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="practicas">
+      <th mat-header-cell *matHeaderCellDef>Practicas</th>
+      <td mat-cell *matCellDef="let item">
+        <mat-chip-list>
+          <mat-chip
+            *ngFor="let practica of item.practicas"
+            [selectable]="false"
+          >
+            {{ practica.nombre_practica }}
+          </mat-chip>
+        </mat-chip-list>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="proyectos">
+      <th mat-header-cell *matHeaderCellDef>Proyectos</th>
+      <td mat-cell *matCellDef="let item">
+        <mat-chip-list>
+          <mat-chip
+            color="accent"
+            *ngFor="let proyecto of item.proyectos"
+            [selectable]="false"
+          >
+            {{ proyecto.nombre_cliente }}
+          </mat-chip>
+        </mat-chip-list>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="roles">
+      <th mat-header-cell *matHeaderCellDef>Roles</th>
+      <td mat-cell *matCellDef="let item">
+        <mat-chip-list>
+          <mat-chip *ngFor="let rol of item.roles" [selectable]="false">
+            {{ rol.nombre_rol }}
+          </mat-chip>
+        </mat-chip-list>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="skills">
+      <th mat-header-cell *matHeaderCellDef>Skills</th>
+      <td mat-cell *matCellDef="let item">
+        <mat-chip-list>
+          <mat-chip *ngFor="let skill of item.skills" [selectable]="false">
+            {{ skill.nombre_skill }}
+          </mat-chip>
+        </mat-chip-list>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>
