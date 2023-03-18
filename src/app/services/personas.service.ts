@@ -12,9 +12,11 @@ export class PersonasService {
 
   constructor(private _http: HttpClient) {}
 
-  public getSolicitudStatsById(id: number) {
+  public getSkillsByPersonaId(id: number) {
     return this._http
-      .get<any>(environment.apiUrl + environment.personas.getPersonas + id)
+      .get<any>(
+        environment.apiUrl + environment.personas.getSkillsByPersonaId + id
+      )
       .pipe(
         map((lista) => {
           const retorno = lista;

@@ -1,3 +1,4 @@
+<!--
 <app-indra-autocomplete
   [apiUrl]="urlProyectos"
   [label]="'Proyectos'"
@@ -20,9 +21,37 @@
   [apiUrl]="urlPracticas"
   [label]="'practicas'"
   (valueChange)="getValuesPracticas($event)"
-></app-indra-autocomplete>
+></app-indra-autocomplete> -->
 
-<app-indra-input-word [label]="'Skill'"></app-indra-input-word>
+<div class="row">
+  <div class="column-left p-sides">
+    <app-indra-input-word
+      [label]="'Proyecto'"
+      (valueChange)="getValuesProyectos($event)"
+    ></app-indra-input-word>
+  </div>
+  <div class="column-right p-sides">
+    <app-indra-autocomplete
+      [apiUrl]="urlRoles"
+      [label]="'Roles'"
+      (valueChange)="getValuesRoles($event)"
+    ></app-indra-autocomplete>
+  </div>
+</div>
+<div class="row">
+  <div class="column-left p-sides">
+    <app-indra-input-word
+      [label]="'Practica'"
+      (valueChange)="getValuesPracticas($event)"
+    ></app-indra-input-word>
+  </div>
+  <div class="column-right p-sides">
+    <app-indra-input-word
+      [label]="'Skill'"
+      (valueChange)="getValuesSkills($event)"
+    ></app-indra-input-word>
+  </div>
+</div>
 
 <!--
 <div style="width: 100%">
@@ -51,11 +80,11 @@
     </mat-chip-grid>
   </mat-form-field>
 </div> -->
-
+<!-- 
 <form class="example-form">
   <div class="container">
     <div class="column-left">
-      <!-- <mat-form-field class="example-full-width" appearance="fill">
+      <mat-form-field class="example-full-width" appearance="fill">
         <mat-label>Proyecto</mat-label>
         <input
           type="text"
@@ -75,7 +104,7 @@
             {{ option.name }}
           </mat-option>
         </mat-autocomplete>
-      </mat-form-field> -->
+      </mat-form-field> 
     </div>
     <div class="column-right">
       <mat-chip-list style="display: inline-flex">
@@ -91,6 +120,7 @@
     </div>
   </div>
 </form>
+-->
 
 <div *ngIf="personasList">
   <!--<form [formGroup]="searchForm" class="search__form" style="font-size: 12px">
@@ -210,6 +240,13 @@
           <div *ngFor="let skill of item.skills.slice(0, 5)">
             *{{ skill.nombre_skill }}
           </div>
+          <button
+            mat-button
+            *ngIf="item.skills.length > 5"
+            (click)="openModalSkill(item)"
+          >
+            Ver más
+          </button>
         </div>
       </td>
     </ng-container>

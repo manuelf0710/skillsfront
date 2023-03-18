@@ -8,6 +8,7 @@ export const environment = {
   server_root: 'http://localhost:8000',
   personas: {
     getPersonas: 'personas/search/',
+    getSkillsByPersonaId: 'personas/skills/',
   },
   proyectos: {
     getProyectosSearch: 'proyectos/search',

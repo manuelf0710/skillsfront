@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [],
@@ -36,6 +37,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatInputModule,
     MatAutocompleteModule,
     MatGridListModule,
+    MatDialogModule,
   ],
 })
 export class MaterialModule {

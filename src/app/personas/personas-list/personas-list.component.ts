@@ -20,52 +20,15 @@ import {
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { MatTableDataSource } from '@angular/material/table';
-import { PersonasService } from '../../services/personas.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-
-export interface Practica {
-  id: number;
-  codigo_practica: String;
-  nombre_practica: String;
-}
-export interface Proyecto {
-  id: number;
-  codigo_proyecto: String;
-  nombre_proyecto: String;
-}
-export interface Skill {
-  id: number;
-  codigo_skill: String;
-  nombre_skill: String;
-  descripcion: String;
-}
-
-export interface Persona {
-  id: number;
-  codigo_persona: String;
-  nombre_persona: String;
-  apellido_persona: String;
-  correo_corporativo: String;
-  correo_personal: String;
-  pais: String;
-  ciudad: String;
-  estado: number;
-  fecha_retiro: Date;
-  estado_laboral_desc: String;
-  fecha_ingreso: Date;
-  fecha_nacimiento: Date;
-  genero: String;
-  ciudad_residencia: String;
-  estado_civil: number;
-  cantidad_hijos: number;
-  direccion_residencia: String;
-  practicas?: any[];
-  proyectos?: any[];
-  skills?: any[];
-  roles?: any[];
-}
+import { MatDialog } from '@angular/material/dialog';
+import { PersonasService } from '../../services/personas.service';
+import { IndraSimpleModalInfoComponent } from 'src/app/shared/components/indra-simple-modal-info/indra-simple-modal-info.component';
+import { PersonaskillComponent } from 'src/app/shared/components/personaskill/personaskill.component';
+import { Persona } from 'src/app/interfaces/persona';
+import { Skill } from 'src/app/interfaces/skill';
 
 export interface User {
   codigo?: string;
@@ -162,6 +125,7 @@ export class PersonasListComponent implements OnInit {
   constructor(
     private FormBuilder: FormBuilder,
     private http: HttpClient,
+    public dialog: MatDialog,
     private _PersonaService: PersonasService
   ) {}
 
@@ -269,16 +233,16 @@ export class PersonasListComponent implements OnInit {
   }
 
   getValuesProyectos(data: any) {
-    const proyectos = data.map((item: any) => {
+    /*const proyectos = data.map((item: any) => {
       return item.id;
-    });
-    this.filtros.proyectos = proyectos;
+    }); */
+    this.filtros.proyectos = data;
   }
   getValuesPracticas(data: any) {
-    const practicas = data.map((item: any) => {
+    /*const practicas = data.map((item: any) => {
       return item.id;
-    });
-    this.filtros.practicas = practicas;
+    }); */
+    this.filtros.practicas = data;
   }
 
   getValuesRoles(data: any) {
@@ -289,13 +253,48 @@ export class PersonasListComponent implements OnInit {
   }
 
   getValuesSkills(data: any) {
-    const skills = data.map((item: any) => {
+    console.log('los skills => ', data);
+    /*const skills = data.map((item: any) => {
       return item.id;
-    });
-    this.filtros.skills = skills;
+    }); */
+    this.filtros.skills = data;
+    console.log('this.filtros.skills => ', this.filtros.skills);
   }
 
   searchPeople() {
+    console.log('this.filtros => ', this.filtros);
     this.loadPersonas();
+  }
+
+  openModalSkill(data: Persona) {
+    const dialogRef = this.dialog.open(PersonaskillComponent, {
+      data: data,
+      minWidth: '600px',
+      minHeight: '400px',
+    });
+  }
+
+  openModalInner(data: Skill[]) {
+    let html = '';
+    html += `<table>
+              <thead>
+                <tr>
+                  <th>
+                  `;
+    data.forEach((element) => {
+      html += `* ${element.nombre_skill} `;
+    });
+    html += `</th></tr>
+              </thead>
+    </table>`;
+    let mensaje = 'prueba de algo';
+    const dialogRef = this.dialog.open(IndraSimpleModalInfoComponent, {
+      data: {
+        mensaje: html,
+      },
+      minWidth: '600px',
+      minHeight: '400px',
+      maxWidth: '700px',
+    });
   }
 }
