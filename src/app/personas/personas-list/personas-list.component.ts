@@ -1,27 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormControl,
-} from '@angular/forms';
-import {
-  tap,
-  catchError,
-  startWith,
-  map,
-  debounceTime,
-  distinctUntilChanged,
-  switchMap,
-  delay,
-} from 'rxjs/operators';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { tap, catchError } from 'rxjs/operators';
 
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { PersonasService } from '../../services/personas.service';
@@ -29,16 +11,6 @@ import { IndraSimpleModalInfoComponent } from 'src/app/shared/components/indra-s
 import { PersonaskillComponent } from 'src/app/shared/components/personaskill/personaskill.component';
 import { Persona } from 'src/app/interfaces/persona';
 import { Skill } from 'src/app/interfaces/skill';
-
-export interface User {
-  codigo?: string;
-  name: string;
-  descripcion?: string;
-}
-
-export interface Fruit {
-  name: string;
-}
 
 @Component({
   selector: 'app-personas-list',
@@ -59,68 +31,15 @@ export class PersonasListComponent implements OnInit {
     'roles',
     'skills',
   ];
-  displayedColumns2: string[] = [
-    'profesional',
-    'fechacita',
-    'horacita',
-    'action',
-  ];
-  profesionalsearch = '';
-  fechacitasearch = '';
-  fechacitadatesearch = '';
+
   urlProyectos = `${environment.apiUrl}${environment.proyectos.getProyectosSearch}`;
   urlPracticas = `${environment.apiUrl}${environment.practicas.getPracticasSearch}`;
   urlSkills = `${environment.apiUrl}${environment.skills.getSkillsSearch}`;
   urlRoles = `${environment.apiUrl}${environment.roles.getRolesSearch}`;
 
-  myControl = new FormControl<string | User>('');
   //options: User[] = [{ name: 'Mary' }, { name: 'Shelley' }, { name: 'Igor' }];
-  options: User[] = [];
-  filteredOptions!: Observable<User[]>;
 
   filtros = { proyectos: [], practicas: [], roles: [], skills: [] };
-
-  selectedOptions: any[] = [];
-
-  addOnBlur = true;
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
-  fruits: Fruit[] = [];
-
-  add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    // Add our fruit
-    if (value) {
-      this.fruits.push({ name: value });
-    }
-
-    // Clear the input value
-    event.chipInput!.clear();
-  }
-
-  remove(fruit: Fruit): void {
-    const index = this.fruits.indexOf(fruit);
-
-    if (index >= 0) {
-      this.fruits.splice(index, 1);
-    }
-  }
-
-  edit(fruit: Fruit, event: MatChipEditedEvent) {
-    const value = event.value.trim();
-
-    // Remove fruit if it no longer has a name
-    if (!value) {
-      this.remove(fruit);
-      return;
-    }
-
-    // Edit existing fruit
-    const index = this.fruits.indexOf(fruit);
-    if (index >= 0) {
-      this.fruits[index].name = value;
-    }
-  }
 
   constructor(
     private FormBuilder: FormBuilder,
@@ -130,49 +49,16 @@ export class PersonasListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap((value) => {
-        if (typeof value === 'string' && value.length >= 3) {
-          return this.searchUsers(value);
-        } else {
-          return of([]);
-        }
-      })
-    );
     this.buildForm();
     this.loadPersonas();
-    console.log('hace algo');
   }
 
-  searchUsers(value: string): Observable<User[]> {
-    const url =
-      environment.apiUrl +
-      '' +
-      environment.proyectos.getProyectosSearch +
-      '?q=' +
-      value;
-    return this.http.get<User[]>(url).pipe(delay(500));
-  }
   private buildForm() {
     this.searchForm = this.FormBuilder.group({
       profesionalsearch: [''],
       fechacitasearch: [''],
       fechacitadatesearch: [''],
     });
-  }
-
-  displayFn(user: User): string {
-    return user && user.name ? user.name : '';
-  }
-
-  private _filter(name: string): User[] {
-    const filterValue = name.toLowerCase();
-
-    return this.options.filter((option) =>
-      option.name.toLowerCase().includes(filterValue)
-    );
   }
 
   loadPersonas() {
@@ -193,43 +79,11 @@ export class PersonasListComponent implements OnInit {
       .subscribe();
   }
 
-  applyFilter() {
-    const date = this.searchForm.get('fechacitadatesearch')?.value;
-    const as = this.searchForm.get('profesionalsearch')?.value;
-    const ds = this.searchForm.get('fechacitasearch')?.value;
-
-    this.fechacitadatesearch =
-      date === null || date === '' ? '' : date.toDateString();
-    this.profesionalsearch = as === null ? '' : as;
-    this.fechacitasearch = ds === null ? '' : ds;
-
-    // create string of our searching values and split if by '$'
-    const filterValue =
-      this.fechacitadatesearch +
-      '$' +
-      this.profesionalsearch +
-      '$' +
-      this.fechacitasearch;
-    this.personasList.filter = filterValue.trim().toLowerCase();
-  }
-
   convertirDateToString(dateFormat: Date) {
     const dateTo = new Date(dateFormat);
     return `${dateTo.getFullYear()}-${dateTo.getMonth() + 1}-${
       dateTo.getDate() < 10 ? '0' + dateTo.getDate() : dateTo.getDate()
     }`;
-  }
-  addChip(event: MatAutocompleteSelectedEvent): void {
-    console.log(event);
-    this.selectedOptions.push(event.option.value);
-    this.myControl?.setValue(null);
-  }
-
-  removeChip(option: any): void {
-    const index = this.selectedOptions.indexOf(option);
-    if (index >= 0) {
-      this.selectedOptions.splice(index, 1);
-    }
   }
 
   getValuesProyectos(data: any) {
@@ -239,9 +93,6 @@ export class PersonasListComponent implements OnInit {
     this.filtros.proyectos = data;
   }
   getValuesPracticas(data: any) {
-    /*const practicas = data.map((item: any) => {
-      return item.id;
-    }); */
     this.filtros.practicas = data;
   }
 
@@ -253,10 +104,6 @@ export class PersonasListComponent implements OnInit {
   }
 
   getValuesSkills(data: any) {
-    console.log('los skills => ', data);
-    /*const skills = data.map((item: any) => {
-      return item.id;
-    }); */
     this.filtros.skills = data;
     console.log('this.filtros.skills => ', this.filtros.skills);
   }
@@ -271,30 +118,6 @@ export class PersonasListComponent implements OnInit {
       data: data,
       minWidth: '600px',
       minHeight: '400px',
-    });
-  }
-
-  openModalInner(data: Skill[]) {
-    let html = '';
-    html += `<table>
-              <thead>
-                <tr>
-                  <th>
-                  `;
-    data.forEach((element) => {
-      html += `* ${element.nombre_skill} `;
-    });
-    html += `</th></tr>
-              </thead>
-    </table>`;
-    let mensaje = 'prueba de algo';
-    const dialogRef = this.dialog.open(IndraSimpleModalInfoComponent, {
-      data: {
-        mensaje: html,
-      },
-      minWidth: '600px',
-      minHeight: '400px',
-      maxWidth: '700px',
     });
   }
 }

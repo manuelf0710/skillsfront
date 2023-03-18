@@ -3,16 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { personaSkill } from 'src/app/interfaces/personaSkill';
 import { PersonasService } from 'src/app/services/personas.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import {
-  tap,
-  catchError,
-  startWith,
-  map,
-  debounceTime,
-  distinctUntilChanged,
-  switchMap,
-  delay,
-} from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
 
 import { Persona } from 'src/app/interfaces/persona';
 

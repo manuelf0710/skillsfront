@@ -3,17 +3,13 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import {
-  tap,
-  catchError,
-  startWith,
-  map,
   debounceTime,
   distinctUntilChanged,
   switchMap,
   delay,
 } from 'rxjs/operators';
 
-interface User {
+interface AutocompleteModel {
   id?: number;
   name: string;
   description?: string;
@@ -27,11 +23,11 @@ interface User {
 export class IndraAutocompleteComponent implements OnInit {
   @Input() apiUrl!: string;
   @Input() label = 'Buscar';
-  @Output() valueChange = new EventEmitter<User[]>();
-  myControl = new FormControl<string | User>('');
-  options: User[] = [];
-  filteredOptions: Observable<User[]> | undefined;
-  selectedOptions: User[] = [];
+  @Output() valueChange = new EventEmitter<AutocompleteModel[]>();
+  myControl = new FormControl<string | AutocompleteModel>('');
+  options: AutocompleteModel[] = [];
+  filteredOptions: Observable<AutocompleteModel[]> | undefined;
+  selectedOptions: AutocompleteModel[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -41,7 +37,7 @@ export class IndraAutocompleteComponent implements OnInit {
       distinctUntilChanged(),
       switchMap((value) => {
         if (typeof value === 'string' && value.length >= 3) {
-          return this.searchUsers(value);
+          return this.searchAutocompleteModels(value);
         } else {
           return of([]);
         }
@@ -49,9 +45,9 @@ export class IndraAutocompleteComponent implements OnInit {
     );
   }
 
-  searchUsers(value: string): Observable<User[]> {
+  searchAutocompleteModels(value: string): Observable<AutocompleteModel[]> {
     const url = this.apiUrl + '?q=' + value;
-    return this.http.get<User[]>(url).pipe(delay(500));
+    return this.http.get<AutocompleteModel[]>(url).pipe(delay(500));
   }
 
   fetchData() {
@@ -63,13 +59,13 @@ export class IndraAutocompleteComponent implements OnInit {
       });
   }
 
-  filter(name: string): User[] {
+  filter(name: string): AutocompleteModel[] {
     return this.options.filter((option) =>
       option.name.toLowerCase().includes(name.toLowerCase())
     );
   }
 
-  displayFn(user: User): string {
+  displayFn(user: AutocompleteModel): string {
     return user ? user.name : '';
   }
 
@@ -84,7 +80,7 @@ export class IndraAutocompleteComponent implements OnInit {
     }
   }
 
-  removeChip(option: User) {
+  removeChip(option: AutocompleteModel) {
     const index = this.selectedOptions.indexOf(option);
     if (index >= 0) {
       this.selectedOptions.splice(index, 1);
