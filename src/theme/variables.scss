@@ -1,3 +1,32 @@
+@import "~@angular/material/theming";
+
+$primary-color: mat-palette($mat-indigo);
+$accent-color: mat-palette($mat-pink, A200, A100, A400);
+$warn-color: mat-palette($mat-red);
+
+@include mat-core();
+
+$custom-theme: mat-light-theme(
+  (
+    color: (
+      primary: $primary-color,
+      accent: $accent-color,
+      warn: $warn-color,
+    ),
+  )
+);
+
+@include angular-material-theme($custom-theme);
+
+$primary-color: #00b0ca;
+$secondary-color: #6c757d;
+$success-color: #28a745;
+$danger-color: #dc3545;
+$warning-color: #ffc107;
+$info-color: #17a2b8;
+$light-color: #f8f9fa;
+$dark-color: #343a40;
+
 $primary-white: #ffffff;
 $secondary-white: #f9f9f9;
 $tertiary-white: #f8f8f8;
@@ -7,11 +36,11 @@ $senary-white: #d4d4d4;
 $septenary-white: #c7c6c6;
 $octonary-white: #c4c4c4;
 $nonary-white: #b3b3b3;
-$gray-button :#898989;
+$gray-button: #898989;
 $denary-white: #e3e3e3;
 
 $primary-black: #000;
-$primary-blue-dark: #001A26;
+$primary-blue-dark: #001a26;
 $secondary-black: #2d2d2d;
 $tertiary-black: #333333;
 $quaternary-black: #282828;
@@ -34,7 +63,7 @@ $tertiary-red: #eb2228;
 $quaternary-red: #e51f3d;
 $quinary-red: #e21c48;
 $senary-red: #dc1a5e;
-$septenary-red: #397EB7;
+$septenary-red: #397eb7;
 $octonary-red: #397eb7;
 $nonary-red: #e31e44;
 $denary-red: #db1961;
@@ -51,7 +80,7 @@ $nonary-blue: #e31e44;
 $denary-blue: #db1961;
 
 $primary-yellow: #fea900;
-$underline-yellow:#F2C94C;
+$underline-yellow: #f2c94c;
 $seconday-yellow: #ec2224;
 $tertiary-yellow: #eb2228;
 $quaternary-yellow: #e51f3d;
